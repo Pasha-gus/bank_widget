@@ -1,13 +1,30 @@
 from src.masks import get_mask_account, get_mask_card_number
+
+
 def mask_account_card(card_name_mask: str) -> str:
     """Функция возвращающая названия и маску карты"""
     name_mask = card_name_mask.split(" ")
-    if len(name_mask[1]) == 16:
-        return f"{name_mask[0]} {get_mask_card_number(name_mask[1])}"
-    elif len(name_mask[1]) == 20:
-        return f"{name_mask[0]} {get_mask_account(name_mask[1])}"
+    if name_mask[0] == "Счет":
+        if len(name_mask[1]) == 20:
+            return f"{name_mask[0]} {get_mask_account(name_mask[1])}"
+        else:
+            return "Неверный формат номера счета"
+    elif len(name_mask) == 2:
+        if len(name_mask[-1]) == 16:
+            return f"{name_mask[0]} {get_mask_card_number(name_mask[1])}"
+        else:
+            return "Неверный формат номера карты"
+    elif len(name_mask) == 3:
+        if len(name_mask[-1]) == 16:
+            return f"{" ".join(name_mask[0:2])} {get_mask_card_number(name_mask[2])}"
+        else:
+            return "Неверный формат номера карты"
     else:
-        return "Неверный формат"
+        mask = "".join(name_mask[-4:])
+        if len(mask) == 16:
+            return f"{" ".join(name_mask[0:-4])} {get_mask_card_number(mask)}"
+        else:
+            return "Неверный формат номера карты"
 
 
 def get_data(data_time: str) -> str:
@@ -17,3 +34,4 @@ def get_data(data_time: str) -> str:
     return format_data
 
 
+print(mask_account_card('Platinum 899092211366522998'))

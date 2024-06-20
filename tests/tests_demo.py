@@ -1,5 +1,5 @@
 from src.masks import get_mask_account, get_mask_card_number
-from src.widget import mask_account_card, get_data
+from src.widget import get_data, mask_account_card
 
 number_card = 7000792289606361
 number_check = 73654108430135874305

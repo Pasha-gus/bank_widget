@@ -28,10 +28,10 @@ def mask_account_card(card_name_mask: str) -> str:
 
 
 def get_data(data_time: str) -> str:
-    parts = data_time.split("T")
-    data = parts[0]
-    format_data = data[8:] + "." + data[5:7] + "." + data[:4]
-    return format_data
-
-
-print(mask_account_card('Platinum 899092211366522998'))
+    if "T" in data_time:
+        parts = data_time.split("T")
+        data = parts[0]
+        format_data = data[8:] + "." + data[5:7] + "." + data[:4]
+        return format_data
+    else:
+        raise ValueError("Неправильно задан формат даты")

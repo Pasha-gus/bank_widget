@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 
 
 def transaction_data(path_file: str) -> list:
+    """принимает на вход путь до JSON-файла и возвращает список словарей с данными о финансовых транзакциях. Если файл пустой, содержит не список или не найден, функция возвращает пустой список."""
     if not os.path.exists(path_file):
         return []
     try:
@@ -17,5 +18,3 @@ def transaction_data(path_file: str) -> list:
     if type(data_file) is not list:
         return []
     return data_file
-
-

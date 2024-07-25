@@ -7,29 +7,58 @@ import pandas as pd
 
 logger = logging.getLogger("utils")
 logger.setLevel(logging.INFO)
-file_handler = logging.FileHandler("..\\logs\\utils.log", encoding="utf-8")
+file_handler = logging.FileHandler(os.path.join(os.getcwd(), "logs", "utils.log"), encoding="utf-8")
 file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s: %(message)s")
 file_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)
 
 
 def transaction_data(path_file: str) -> list:
-    """принимает на вход путь до JSON-файла и возвращает список словарей с данными о финансовых транзакциях. Если файл
-    пустой, содержит не список или не найден, функция возвращает пустой список."""
+    """Принимает на вход путь до JSON-файла и возвращает список словарей с данными о финансовых транзакциях.
+    Если файл пустой, содержит не список или не найден, функция возвращает пустой список."""
+
+    # Проверка существования файла
     if not os.path.exists(path_file):
         logger.critical(f"Файла {path_file} не существует")
         return []
+
     try:
         logger.info("Считываем содержимое файла")
         with open(path_file, encoding="utf-8") as file:
             data_file = json.load(file)
+
+        # Проверка, является ли считанное значение списком
+        if not isinstance(data_file, list):
+            logger.critical(f"Файл {path_file} не содержит список")
+            return []
+
+        transformed_data = []
+        for entry in data_file:
+            # Обработка записи о транзакции
+            try:
+                transformed_entry = {
+                    "id": entry["id"],
+                    "state": entry["state"],
+                    "date": entry["date"].replace(" ", "Z"),  # Заменим пробел на Z для формата UTC
+                    "amount": entry["operationAmount"]["amount"],
+                    "currency_name": entry["operationAmount"]["currency"]["name"],
+                    "currency_code": entry["operationAmount"]["currency"]["code"],
+                    "to": entry["to"],
+                    "description": entry["description"]
+                }
+                # Добавим поле "from", если оно есть
+                if "from" in entry:
+                    transformed_entry["from"] = entry["from"]
+
+                transformed_data.append(transformed_entry)
+            except KeyError as e:
+                logger.error(f"Отсутствует ожидаемое поле в записи: {e}")
+
     except json.JSONDecodeError as ex:
-        logging.error(f"Произошла ошибка: {ex}")
+        logger.error(f"Произошла ошибка при декодировании JSON: {ex}")
         return []
-    if type(data_file) is not list:
-        logger.critical(f"Файл {path_file} не содержит список")
-        return []
-    return data_file
+
+    return transformed_data
 
 
 def transaction_data_csv(path_file: str) -> list:

@@ -1,4 +1,5 @@
 import re
+from collections import Counter
 
 
 def filter_by_line(operations: list[dict], search_line: str) -> list[dict]:
@@ -14,14 +15,16 @@ def filter_by_line(operations: list[dict], search_line: str) -> list[dict]:
 
 
 def count_operations_by_category(operations: list[dict], categories: list[str]) -> dict[str, int]:
-    """принимает список словарей с данными о банковских операциях и список категорий операций, а возвращает словарь,
-    в котором ключи — это названия категорий, а значения — это количество операций в каждой категории."""
-    category_count = {category: 0 for category in categories}
+    """Принимает список словарей с данными о банковских операциях и список категорий операций,
+    а возвращает словарь, в котором ключи — это названия категорий, а значения — это количество операций
+     в каждой категории.
+    """
+
+    category_count = Counter()
 
     for operation in operations:
-        if "description" in operation:
-            for category in categories:
-                if category.lower() in operation["description"].lower():
-                    category_count[category] += 1
+        category = operation.get("description")
+        if category in categories:
+            category_count[category] += 1
 
-    return category_count
+    return {category: category_count.get(category, 0) for category in categories}

@@ -3,7 +3,6 @@ from unittest.mock import Mock, mock_open, patch
 from src.utils import transaction_data, transaction_data_csv, transaction_data_excel
 
 
-
 def test_file_not_exists():
     result = transaction_data("fake_path.json")
     assert result == []
@@ -39,7 +38,11 @@ def test_file_csv_not_exist():
 
 
 def test_transaction_data_csv_success():
-    mock_file_content = "id;state;date;amount;currency_name;currency_code;from;to;description\n650703;EXECUTED;2023-09-05T11:30:32Z;16210;Sol;PEN;Счет 58803664561298323391;Счет 39745660563456619397;Перевод организации\n"
+    mock_file_content = (
+        "id;state;date;amount;currency_name;currency_code;from;to;description\n"
+        "650703;EXECUTED;2023-09-05T11:30:32Z;16210;Sol;PEN;Счет 58803664561298323391;"
+        "Счет 39745660563456619397;Перевод организации\n"
+    )
 
     with patch("builtins.open", mock_open(read_data=mock_file_content)):
         result = transaction_data_csv("mocked_path.csv")

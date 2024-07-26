@@ -30,18 +30,23 @@ def test_count_operations_by_category():
         {"description": "Покупка в магазине", "amount": 100, "date": "2023-10-01"},
         {"description": "Оплата кредита", "amount": 200, "date": "2023-10-02"},
         {"description": "Доставка товаров", "amount": 300, "date": "2023-10-03"},
-        {"description": "Перевод в магазин", "amount": 400, "date": "2023-10-04"},
+        {"description": "Покупка в магазине", "amount": 400, "date": "2023-10-04"},
     ]
-    categories = ["магазин", "кредит", "доставка"]
+
+    categories = ["Покупка в магазине", "Оплата кредита", "Доставка товаров"]
 
     count = count_operations_by_category(operations, categories)
 
-    assert count["магазин"] == 2
-    assert count["кредит"] == 1
-    assert count["доставка"] == 1  #
+    assert count["Покупка в магазине"] == 2
+    assert count["Оплата кредита"] == 1
+    assert count["Доставка товаров"] == 1
 
     # Проверка на пустой список операций
     empty_count = count_operations_by_category([], categories)
-    assert empty_count["магазин"] == 0
-    assert empty_count["кредит"] == 0
-    assert empty_count["доставка"] == 0
+    assert empty_count["Покупка в магазине"] == 0
+    assert empty_count["Оплата кредита"] == 0
+    assert empty_count["Доставка товаров"] == 0
+
+    # Проверка на категории, которых нет в операциях
+    new_count = count_operations_by_category(operations, ["Неизвестная категория"])
+    assert new_count["Неизвестная категория"] == 0

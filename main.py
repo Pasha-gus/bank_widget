@@ -97,17 +97,16 @@ def main():
     else:
         finaly_list = rub_tran_list
     if finaly_list:
-        print(finaly_list)
         print(f"Всего банковских операций в выборке: {len(finaly_list)}\n")
         for transaction in finaly_list:
             if "from" in transaction:
-                if not transaction["from"] or type(transaction["from"]) == float:
+                if not transaction["from"] or isinstance(transaction["from"], float):
                     print(
                         f"""{get_data(transaction["date"])} {transaction["description"]}
 {mask_account_card(transaction["to"])}
 Сумма: {transaction["amount"]} {transaction["currency_name"]}\n"""
                     )
-                elif not transaction["to"] or type(transaction["to"]) == float:
+                elif not transaction["to"] or isinstance(transaction["to"], float):
                     print(
                         f"""{get_data(transaction["date"])} {transaction["description"]}
 {mask_account_card(transaction["from"])}

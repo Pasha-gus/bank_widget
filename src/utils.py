@@ -44,7 +44,7 @@ def transaction_data(path_file: str) -> list:
                     "currency_name": entry["operationAmount"]["currency"]["name"],
                     "currency_code": entry["operationAmount"]["currency"]["code"],
                     "to": entry["to"],
-                    "description": entry["description"]
+                    "description": entry["description"],
                 }
                 # Добавим поле "from", если оно есть
                 if "from" in entry:

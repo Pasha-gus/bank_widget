@@ -1,4 +1,19 @@
+import logging
+import os.path
 from typing import Union
+
+logger = logging.getLogger("masks")
+logger.setLevel(logging.INFO)
+
+# Создайте директорию logs, если она не существует
+log_directory = os.path.join(os.getcwd(), "logs")
+os.makedirs(log_directory, exist_ok=True)
+
+# Установите обработчик файлового логирования
+file_handler = logging.FileHandler(os.path.join(log_directory, "masks.log"), encoding="utf-8")
+file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s: %(message)s")
+file_handler.setFormatter(file_formatter)
+logger.addHandler(file_handler)
 
 
 def get_mask_card_number(number_card: Union[int, str]) -> str:
@@ -7,6 +22,7 @@ def get_mask_card_number(number_card: Union[int, str]) -> str:
     if len(convert_number_card) != 16:
         return "Неверный формат номера карты"
     else:
+        logger.info("Составляем маску карты")
         mask_card = (
             convert_number_card[:4]
             + " "
@@ -22,6 +38,7 @@ def get_mask_card_number(number_card: Union[int, str]) -> str:
 
 def get_mask_account(number_check: Union[int, str]) -> str:
     """Функция которая возращает маску номера счета"""
+    logger.info("Составляем маску счета")
     convert_number_check = str(number_check)
     if len(convert_number_check) != 20:
         return "Неверный формат номера счета"

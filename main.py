@@ -36,7 +36,7 @@ def main():
 Доступные для фильтровки статусы: EXECUTED, CANCELED, PENDING\n"""
     )
     sort_status = input()
-    while sort_status not in ["EXECUTED", "CANCELED", "PENDING"]:
+    while sort_status.upper() not in ["EXECUTED", "CANCELED", "PENDING"]:
         print(f"Статус операции {sort_status} недоступен.")
         print(
             """Введите статус, по которому необходимо выполнить фильтрацию.
